@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Project Path="ArchivosMan.BLL/ArchivosMan.BLL.csproj" Id="ed6c23cc-5591-4afa-9d5d-2d26612e1ae4" />
+  <Project Path="ArchivosMan.DAL/ArchivosMan.DAL.csproj" Id="f91552c8-eb41-4b74-85a8-77fbe66463f6" />
+  <Project Path="ArchivosMan.Entity/ArchivosMan.Entity.csproj" Id="4e13533c-449e-4713-bf40-0ecaffc3e882" />
+  <Project Path="ArchivosMan.IOC/ArchivosMan.IOC.csproj" Id="46594ddf-b486-46d6-898d-4fdd6e0656fd" />
+  <Project Path="ArchivosMan.Web/ArchivosMan.Web.csproj" Id="09635bff-45ce-475a-b282-f849df649835" />
+</Solution>
