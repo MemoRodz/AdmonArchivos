@@ -13,4 +13,9 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ArchivosMan.DAL\ArchivosMan.DAL.csproj" />
+    <ProjectReference Include="..\ArchivosMan.Entity\ArchivosMan.Entity.csproj" />
+  </ItemGroup>
+
 </Project>
