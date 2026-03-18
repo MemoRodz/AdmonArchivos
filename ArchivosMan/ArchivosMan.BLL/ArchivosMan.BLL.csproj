@@ -14,6 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
+    <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ArchivosMan.DAL\ArchivosMan.DAL.csproj" />
     <ProjectReference Include="..\ArchivosMan.Entity\ArchivosMan.Entity.csproj" />
   </ItemGroup>
