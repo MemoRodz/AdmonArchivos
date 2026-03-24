@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <Folder Include="DTO\" />
-    <Folder Include="Implementacion\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
