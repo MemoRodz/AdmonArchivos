@@ -10,8 +10,22 @@ using ArchivosMan.DAL.Interfaces;
 
 namespace ArchivosMan.IOC
 {
-    public class Dependencia
+    public static class Dependencia
     {
+        public static IServiceCollection AddSistema(this IServiceCollection services, IConfiguration config)
+        {
+            var connectionString = config.GetConnectionString("ContextDb");
 
+            services.AddDbContextFactory<ArchivosContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<ICryptoService, CryptoService>();
+            services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<IFirebaseConfigService, FirebaseConfigService>();
+            services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
+
+            return services;
+        }
     }
 }

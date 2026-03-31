@@ -138,5 +138,11 @@ namespace ArchivosMan.BLL.Implementacion
         {
             return celsius * 9 / 5 + 32;
         }
+
+        public string GenerarClave()
+        {
+            string clave = Guid.NewGuid().ToString("N").Substring(0, 6);
+            return clave;
+        }
     }
 }

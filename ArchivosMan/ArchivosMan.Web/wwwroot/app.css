@@ -43,7 +43,7 @@ h1:focus {
 }
 
     .blazor-error-boundary::after {
-        content: "An error has occurred."
+        content: "Se ha producido un error."
     }
 
 .darker-border-checkbox.form-check-input {
@@ -58,3 +58,141 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Cargando...");
+    }
+
+.custom-file-input-short {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-upload-btn {
+    cursor: pointer;
+}
+
+.custom-file-input-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+/* Modificaciones personalizadas. */
+
+.presentacion-page {
+    min-height: 100vh;
+    background-image: url('/images/login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.presentacion-overlay {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.presentacion-box {
+    width: 100%;
+    max-width: 720px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.excel-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #cfd6dc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.excel-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.95rem;
+}
+
+    .excel-table thead th {
+        background-color: #e9f0f7;
+        color: #1f2937;
+        font-weight: 600;
+        text-align: left;
+        border: 1px solid #cfd6dc;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+
+    .excel-table tbody td {
+        border: 1px solid #d9dee3;
+        padding: 6px 10px;
+        vertical-align: middle;
+        background-color: #fff;
+    }
+
+    .excel-table tbody tr:hover td {
+        background-color: #f8fbff;
+    }
+
+    .excel-table input.form-control {
+        border: 1px solid #86b7fe;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 4px 6px;
+        min-height: auto;
+    }
+
+    .excel-table .acciones {
+        white-space: nowrap;
+        width: 170px;
+    }
+
+    .excel-table .btn {
+        padding: 0.20rem 0.45rem;
+        font-size: 0.80rem;
+    }

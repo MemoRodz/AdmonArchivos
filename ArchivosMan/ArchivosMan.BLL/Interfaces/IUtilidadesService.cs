@@ -9,5 +9,7 @@
         decimal celsiusF(decimal fahrenheit);
 
         decimal fahrenheit(decimal celsius);
+
+        string GenerarClave();
     }
 }

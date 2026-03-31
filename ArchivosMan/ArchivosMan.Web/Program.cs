@@ -1,10 +1,22 @@
+using ArchivosMan.Web;
 using ArchivosMan.Web.Components;
+using ArchivosMan.IOC;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+// Controllers
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
+// Dependencias personalizadas
+builder.Services.AddSistema(builder.Configuration);
+// Blazor
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
 
 var app = builder.Build();
 
