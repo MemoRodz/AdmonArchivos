@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchivosMan.BLL.Services
 {
-    internal class AuthState
+    public class AuthState
     {
     }
 }

@@ -1,11 +1,8 @@
 ﻿using ArchivosMan.BLL.Interfaces;
 using ArchivosMan.DAL.Interfaces;
 using ArchivosMan.Entity;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 
 namespace ArchivosMan.BLL.Implementacion
 {
