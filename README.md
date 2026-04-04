@@ -98,7 +98,7 @@ Solución
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/USUARIO/REPOSITORIO.git
+git clone https://github.com/MemoRodz/AdmonArchivos.git
 ```
 
 ### 2. Abrir la solución
