@@ -56,22 +56,26 @@ Solución
 │
 ├── Sistema.DAL
 │   ├── Contexto
-│   ├── Entidades
-│   ├── Repositorios
-│   └── Persistencia
+│   ├── Implementación
+│   └── Interfaces
+│
+├── Sistema.Entidades
+│   └── Clases de las entidades
 │
 ├── Sistema.BLL
 │   ├── Interfaces
-│   ├── Implementacion
+│   ├── Implementación
 │   ├── Services
 │   ├── DTO
-│   └── Reglas de negocio
+│   └── Clase para constantes
 │
 ├── Sistema.IOC
 │   └── Configuración de dependencias
 │
 └── Sistema.Presentacion
     ├── Components
+    ├── Controller
+    ├── Models
     ├── Pages
     ├── Shared
     ├── wwwroot
