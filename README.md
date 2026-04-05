@@ -10,15 +10,15 @@ Este sistema fue construido para administrar distintos módulos del negocio, man
 
 Actualmente incluye funcionalidades como:
 
-- Autenticación de usuarios.
-- Control de acceso por roles y permisos.
-- Gestión de usuarios.
-- Gestión de países.
-- Gestión de estados.
-- Gestión de proyectos.
-- Gestión de archivos.
+- Autenticación de **usuarios**.
+- Control de acceso por **roles** y **permisos**.
+- Gestión de **usuarios**.
+- Gestión de **países**.
+- Gestión de **estados**.
+- Gestión de **proyectos**.
+- Gestión de **archivos**.
 - Recuperación de contraseña.
-- Navegación dinámica por menú según perfil.
+- Navegación **dinámica** por **menú** según **perfil**.
 
 ## Arquitectura
 
