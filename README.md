@@ -173,3 +173,15 @@ Entre los avances importantes se encuentran:
 ## Autor
 
 Proyecto desarrollado y mantenido por [MemoRodz](https://github.com/MemoRodz).
+
+----
+<br/>  
+
+<div align="center">
+            <a href="https://paypal.me/memorodzs" target="_blank" style="display: inline-block;">
+                <img
+                    src="https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square&logo=paypal" 
+                    align="center"
+                />
+            </a></div>
+<br />
