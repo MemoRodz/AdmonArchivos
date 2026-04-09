@@ -1,0 +1,122 @@
+﻿@page "/administracion/usuarios"
+@rendermode InteractiveServer
+@using ArchivosMan.Web.Components.Shared
+
+<AuthGuard>
+    @if (!PuedeVerPagina)
+    {
+        <div class="alert alert-danger">
+            No tienes permisos para acceder a esta página.
+        </div>
+    }
+    else
+    {
+        <h3>Usuarios</h3>
+
+        <button class="btn btn-primary mb-2" @onclick="NuevoUsuario">Nuevo usuario</button>
+
+        @if (IsLoading)
+        {
+            <p>Cargando...</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Clave</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in ListaUsuarios)
+                    {
+                        <tr>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <input class="form-control" @bind="UsuarioEditando.UrlFoto" />
+                                }
+                                else
+                                {
+                                    @if (!string.IsNullOrWhiteSpace(u.UrlFoto))
+                                    {
+                                        <img src="@u.UrlFoto"
+                                             alt="Foto de @u.Nombre"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:50%;" />
+                                    }
+                                    else
+                                    {
+                                        <span>Sin foto</span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <input class="form-control" @bind="UsuarioEditando.Nombre" />
+                                }
+                                else
+                                {
+                                    @u.Nombre
+                                }
+                            </td>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <input class="form-control" @bind="UsuarioEditando.Correo" />
+                                }
+                                else
+                                {
+                                    @u.Correo
+                                }
+                            </td>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <select class="form-select" @bind="UsuarioEditando.RolId">
+                                        @foreach (var r in RolesPermitidos)
+                                        {
+                                            <option value="@r.IdRol">@r.Descripcion</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    @ListaRoles.FirstOrDefault(r => r.IdRol == u.RolId)?.Descripcion
+                                }
+                            </td>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <input class="form-control" type="password" @bind="ClaveTemporal" />
+                                }
+                                else
+                                {
+                                    @:****
+                                }
+                            </td>
+                            <td>
+                                @if (UsuarioEditando != null && UsuarioEditando.IdUsuario == u.IdUsuario && ModoEdicion)
+                                {
+                                    <button class="btn btn-sm btn-success me-1" @onclick="GuardarEdicion">Guardar</button>
+                                    <button class="btn btn-sm btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarUsuario(u)">Editar</button>
+                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarUsuario(u.IdUsuario)">Eliminar</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+
+</AuthGuard>
