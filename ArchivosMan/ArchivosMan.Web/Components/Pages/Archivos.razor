@@ -1,0 +1,150 @@
+﻿@page "/herramientas/archivos"
+@rendermode InteractiveServer
+@using ArchivosMan.BLL
+@using ArchivosMan.Web.Components.Shared
+@using Microsoft.AspNetCore.Components.Forms
+
+<AuthGuard>
+    <PageTitle>Archivos</PageTitle>
+
+    <div class="excel-page">
+        <div class="excel-header">
+            <h3>Archivos</h3>
+
+            @if (PuedeCrear)
+            {
+                <button class="btn btn-primary mb-3" @onclick="NuevoArchivo">Nuevo archivo</button>
+            }
+        </div>
+        @if (IsLoading)
+        {
+            <p><em>Cargando...</em></p>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger">@MensajeError</div>
+            }
+
+            @if (!string.IsNullOrEmpty(MensajeOk))
+            {
+                <div class="alert alert-success">@MensajeOk</div>
+            }
+
+            <div class="excel-table-wrapper archivos-table-wrapper">
+                <table class="table excel-table archivos-table">
+                    <thead>
+                        <tr>
+                            <th class="col-url">Url</th>
+                            <th class="col-nombre">Nombre</th>
+                            <th class="col-categoria">Categoría</th>
+                            @if (PuedeEditar || PuedeEliminar)
+                            {
+                                <th class="col-acciones">Acciones</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in ListaArchivos)
+                        {
+                            <tr>
+                                <td class="col-url">
+                                    <img src="@a.Url"
+                                         alt="Foto de @a.Nombre"
+                                         class="archivo-thumb" />
+                                </td>
+                                <td class="col-nombre" title="@a.Nombre"><span class="texto-truncado">@a.Nombre</span></td>
+                                <td class="col-categoria">@NombreCategoria(a.CategoriaId)</td>
+                                @if (PuedeEditar || PuedeEliminar)
+                                {
+                                    <td class="col-acciones acciones">
+                                        @if (PuedeEditar)
+                                        {
+                                            <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarArchivo(a)">Editar</button>
+                                        }
+                                        @if (PuedeEliminar)
+                                        {
+                                            <button class="btn btn-sm btn-danger" @onclick="() => EliminarArchivo(a.IdArchivo)">Eliminar</button>
+                                        }
+                                    </td>
+                                    
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (MostrarModal)
+            {
+                <div class="modal fade show d-block" tabindex="-1" style="background-color:rgba(0,0,0,0.5);">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <EditForm Model="ArchivoForm" OnValidSubmit="GuardarArchivo">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">@((EsNuevo ? "Nuevo" : "Editar") + " archivo")</h5>
+                                    <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Categoría</label>
+                                        <InputSelect class="form-select" @bind-Value="ArchivoForm.CategoriaId">
+                                            <option value="">-- Seleccione --</option>
+                                            @foreach (var c in ListaCategorias.Where(c => Constantes.idsPermitidos.Contains(c.IdCategoria)))
+                                            {
+                                                <option value="@c.IdCategoria">@c.Nombre</option>
+                                            }
+                                        </InputSelect>
+                                        <ValidationMessage For="@(() => ArchivoForm.CategoriaId)" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Archivo (imagen)</label>
+                                        <InputFile OnChange="OnFileSelected" accept=".png,.jpg,.jpeg,.gif,.webp" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre (solo lectura)</label>
+                                        <InputText class="form-control" @bind-Value="ArchivoForm.Nombre" readonly />
+                                        <ValidationMessage For="@(() => ArchivoForm.Nombre)" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">URL (solo lectura)</label>
+                                        <InputText class="form-control" @bind-Value="ArchivoForm.Url" readonly />
+                                        <ValidationMessage For="@(() => ArchivoForm.Url)" />
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(ArchivoForm.Url))
+                                    {
+                                        <div class="mb-3">
+                                            <label class="form-label">Vista previa</label>
+                                            <br />
+                                            <img src="@ArchivoForm.Url"
+                                                 alt="Vista previa"
+                                                 style="width:96px;height:96px;object-fit:cover;border-radius:8px;" />
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" @onclick="CerrarModal">Cancelar</button>
+                                    <button class="btn btn-primary" type="submit">Guardar</button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+
+
+</AuthGuard>

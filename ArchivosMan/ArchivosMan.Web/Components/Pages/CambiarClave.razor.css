@@ -1,0 +1,26 @@
+﻿.cambiarclave-page {
+    min-height: 100vh;
+    background-image: url('/images/login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.cambiarclave-overlay {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.cambiarclave-box {
+    width: 100%;
+    max-width: 620px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,194 @@
+﻿@page "/cambiar-clave"
+@rendermode InteractiveServer
+@using ArchivosMan.BLL
+@using ArchivosMan.BLL.Interfaces
+@using ArchivosMan.BLL.Services
+@using ArchivosMan.Entity
+@using ArchivosMan.Web.Components.Shared
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@inject AuthState Auth
+@inject IUsuarioService UsuarioService
+@inject ICryptoService CryptoService
+@inject IWebHostEnvironment Env
+
+<AuthGuard>
+    <div class="cambiarclave-page">
+        <div class="cambiarclave-overlay">
+            <div class="cambiarclave-box">
+                <h3>Cambiar contraseña</h3>
+
+                @if (!Auth.EstaAutenticado || Auth.UsuarioActual is null)
+                {
+                    <div class="alert alert-warning">
+                        No hay un usuario autenticado.
+                    </div>
+                }
+                else
+                {
+                    <EditForm Model="@modelo" OnValidSubmit="OnSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        @if (!string.IsNullOrEmpty(MensajeError))
+                        {
+                            <div class="alert alert-danger">@MensajeError</div>
+                        }
+                        @if (!string.IsNullOrEmpty(MensajeOk))
+                        {
+                            <div class="alert alert-success">@MensajeOk</div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña actual</label>
+                            <InputText @bind-Value="modelo.ClaveActual" class="form-control" type="password" />
+                            <ValidationMessage For="@(() => modelo.ClaveActual)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <InputText @bind-Value="modelo.ClaveNueva" class="form-control" type="password" />
+                            <ValidationMessage For="@(() => modelo.ClaveNueva)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar nueva contraseña</label>
+                            <InputText @bind-Value="modelo.ClaveConfirmacion" class="form-control" type="password" />
+                            <ValidationMessage For="@(() => modelo.ClaveConfirmacion)" />
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                        <button class="btn btn-outline-secondary ms-2" type="button" @onclick="RestablecerPorCorreo">
+                            Restablecer automáticamente
+                        </button>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
+
+</AuthGuard>
+
+
+@code {
+    private CambiarClaveModel modelo = new();
+    private string MensajeError { get; set; } = string.Empty;
+    private string MensajeOk { get; set; } = string.Empty;
+
+
+
+    public class CambiarClaveModel
+    {
+        [Required(ErrorMessage = "La contraseña actual es obligatoria.")]
+        public string ClaveActual { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La nueva contraseña es obligatoria.")]
+        [MinLength(6, ErrorMessage = "La nueva contraseña debe tener al menos 6 caracteres.")]
+        public string ClaveNueva { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La confirmación es obligatoria.")]
+        [Compare(nameof(ClaveNueva), ErrorMessage = "Las contraseñas no coinciden.")]
+        public string ClaveConfirmacion { get; set; } = string.Empty;
+    }
+
+    private async Task OnSubmit()
+    {
+        MensajeError = string.Empty;
+        MensajeOk = string.Empty;
+
+        if (Auth.UsuarioActual is null)
+        {
+            MensajeError = "No hay usuario autenticado.";
+            return;
+        }
+
+        try
+        {
+            // Valida credenciales actuales
+            var usuarioValido = await UsuarioService.ValidarCredencialesAsync(
+                Auth.UsuarioActual.Correo,
+                modelo.ClaveActual);
+
+            if (usuarioValido is null)
+            {
+                MensajeError = "La contraseña actual no es correcta.";
+                return;
+            }
+
+            // Actualizar clave
+            var usuario = new Usuario
+            {
+                IdUsuario = Auth.UsuarioActual.IdUsuario,
+                Nombre = Auth.UsuarioActual.Nombre,
+                Correo = Auth.UsuarioActual.Correo,
+                RolId = Auth.UsuarioActual.RolId,
+                UrlFoto = Auth.UsuarioActual.UrlFoto,
+                Clave = modelo.ClaveNueva // se encripta en UsuarioService.ActualizarAsync
+            };
+
+            var actualizado = await UsuarioService.ActualizarAsync(
+                usuario,
+                Auth.UsuarioActual.IdUsuario);
+
+            if (actualizado is null)
+            {
+                MensajeError = "No fue posible actualizar la contraseña.";
+                return;
+            }
+            // Respaldando al usuario en caso de cambio de contraseña.
+            var rutaPlantilla = Path.Combine(
+            Env.WebRootPath, "templates", Constantes.Servicios.Template);
+
+            // Envia Correo
+            var ok = await UsuarioService.EnviarClave(
+                actualizado.Correo,
+                rutaPlantilla, 1);
+
+            if (!ok)
+            {
+                MensajeError = "No fue posible enviar confirmación de cambio de contraseña.";
+            }
+
+
+            MensajeOk = "Contraseña actualizada correctamente.";
+            modelo = new CambiarClaveModel();
+        }
+        catch (Exception ex)
+        {
+            MensajeError = "Error al actualizar la contraseña: " + ex.Message;
+        }
+    }
+
+    private async Task RestablecerPorCorreo()
+    {
+        MensajeError = string.Empty;
+        MensajeOk = string.Empty;
+
+        if (Auth.UsuarioActual is null)
+        {
+            MensajeError = "No hay usuario autenticado.";
+            return;
+        }
+
+        try
+        {
+            var rutaPlantilla = Path.Combine(
+                Env.WebRootPath, "templates", Constantes.Servicios.Template);
+
+            var ok = await UsuarioService.RestablecerClave(
+                Auth.UsuarioActual.Correo,
+                rutaPlantilla);
+
+            if (!ok)
+            {
+                MensajeError = "No fue posible restablecer la contraseña. Intente más tarde.";
+                return;
+            }
+            MensajeOk = "Se generó una nueva contraseña y se envió al correo registrado.";
+        }
+        catch (Exception ex)
+        {
+            MensajeError = $"Error al restablecer la contraseña: {ex.Message}";
+        }
+    }
+}
