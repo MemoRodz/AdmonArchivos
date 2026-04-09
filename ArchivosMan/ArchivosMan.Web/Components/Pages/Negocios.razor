@@ -1,5 +1,160 @@
-﻿<h3>Negocios</h3>
+﻿@page "/administracion/negocios"
 
-@code {
+@rendermode InteractiveServer
+@using ArchivosMan.BLL.Implementacion
+@using ArchivosMan.Web.Components.Shared
 
-}
+<AuthGuard>
+    <PageTitle>Negocios</PageTitle>
+
+    <h3>Negocio</h3>
+
+    @if (IsLoading)
+    {
+        <p>Cargando...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(MensajeError))
+        {
+            <div class="alert alert-danger">@MensajeError</div>
+        }
+        @if (!string.IsNullOrEmpty(MensajeOk))
+        {
+            <div class="alert alert-success">@MensajeOk</div>
+        }
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Seleccionar negocio</span>
+                <div>
+                    <select class="form-select form-select-sm d-inline-block w-auto me-2"
+                            @bind="NegocioSeleccionadoId"
+                            disabled="@(ListaNegocios.Count == 0)">
+                        @if (!ListaNegocios.Any())
+                        {
+                            <option value="">Sin negocios registrados</option>
+                        }
+                        else
+                        {
+                            @foreach (var n in ListaNegocios)
+                            {
+                                <option value="@n.IdNegocio">@n.Nombre</option>
+                            }
+                        }
+                    </select>
+                    @if (PuedeCrear)
+                    {
+                        <button class="btn btn-sm btn-primary"
+                                @onclick="NuevoNegocio">
+                            Nuevo negocio
+                        </button>
+                    }
+                </div>
+            </div>
+            @if (NegocioSeleccionado is not null)
+            {
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Razón Social <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Nombre" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Correo <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Correo" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Dirección <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Direccion" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Telefono" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">% Impuesto <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" @bind="NegocioSeleccionado.PorcentajeImpuesto" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Símbolo Moneda <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.SimboloMoneda" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Código Postal <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Codpos" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">País <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.Pais" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Número documento <span class="text-danger">*</span></label>
+                                    <input class="form-control" @bind="NegocioSeleccionado.NumeroDocumento" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 text-center">
+                            <label class="form-label d-flex">Logo</label>
+                            @if (!string.IsNullOrWhiteSpace(NegocioSeleccionado.UrlLogo))
+                            {
+                                <img src="@NegocioSeleccionado.UrlLogo"
+                                     alt="Logo @NegocioSeleccionado.Nombre"
+                                     style="width:180px;height:180px;object-fit:cover;border-radius:8px;margin-bottom:1rem;" />
+                            }
+                            else
+                            {
+                                <div class="border rounded d-flex align-items-center justify-content-center mb-3"
+                                     style="width:180px;height:180px;background-color:#f8f9fa;">
+                                    <span class="text-muted">Sin logo</span>
+                                </div>
+                            }
+                            <div class="d-flex gap-3">
+                                <div class="btn btn-sm btn-outline-secondary position-relative overflow-hidden custom-upload-btn">
+                                    Elegir logo
+                                    <InputFile OnChange="OnLogoSeleccionado" class="custom-file-input-hidden" accept=".png,.jpg,.jpeg,.gif,.webp" />
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <span class="text-muted small ms-2">
+                                    @(string.IsNullOrWhiteSpace(NegocioSeleccionado?.NombreLogo) ? "Sin archivo" : NegocioSeleccionado.NombreLogo)
+                                </span>
+                            </div>
+                            
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-success btn-sm me-2"
+                                        @onclick="GuardarSeleccionado"
+                                        disabled="@(!PuedeEditar)">
+                                    Guardar cambios
+                                </button>
+                                @if (PuedeEliminar && NegocioSeleccionado.IdNegocio != 0)
+                                {
+                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => EliminarNegocio(NegocioSeleccionado.IdNegocio)">Eliminar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card-body">
+                    <p class="text-muted mb-0">Selecciona un negocio o crea uno nuevo.</p>
+                </div>
+            }
+        </div>
+    }
+
+</AuthGuard>
