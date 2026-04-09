@@ -1,0 +1,116 @@
+﻿@page "/conversor-horario"
+@rendermode InteractiveServer
+@using ArchivosMan.Web.Components.Pages
+
+<PageTitle>Conversor de Horario</PageTitle>
+
+<h3>Conversor de Horario Mundial</h3>
+
+<div class="card shadow-sm mt-3" style="max-width:650px;">
+    <div class="card-body">
+
+        <div class="row mb-3">
+            <div class="col-md-5">
+                <label class="form-label">
+                    Zona horaria origen
+                </label>
+                <input class="form-control form-control-sm mb-1"
+                       placeholder="Buscar zona origen..."
+                       @bind="FiltroOrigen"
+                       @bind:event="oninput" />
+                <select class="form-select"
+                        size="5"
+                        @bind="ZonaOrigen">
+                    @foreach (var z in ZonasFiltradas(FiltroOrigen))
+                    {
+                        <option value="@z.Id">@z.Nombre</option>
+                    }
+                </select>
+            </div>
+            <!-- Botón invertir centrado entre los dos combos -->
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        title="Invertir zonas"
+                        @onclick="InvertirZonas">
+                    <span class="fa-solid fa-right-left"></span>
+                </button>
+            </div>
+            <div class="col-md-5">
+                <label class="form-label">
+                    Zona horaria destino
+                </label>
+                <input class="form-control form-control-sm mb-1"
+                       placeholder="Buscar zona destino..."
+                       @bind="FiltroDestino"
+                       @bind:event="oninput" />
+                <select class="form-select"
+                        size="5"
+                        @bind="ZonaDestino">
+                    @foreach (var z in ZonasFiltradas(FiltroDestino))
+                    {
+                        <option value="@z.Id">@z.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">
+                    Fecha y hora a convertir
+                </label>
+                <input type="datetime-local"
+                       class="form-control"
+                       @bind="FechaHoraEntrada"
+                       @bind:format="yyyy-MM-ddTHH:mm" />
+            </div>
+            <div class="col-md-6 d-flex gap-2">
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        @onclick="UsarAhora">
+                    <span class="fa-regular fa-clock me-1"></span>
+                    Usar hora actual
+                </button>
+                <button class="btn btn-primary"
+                        type="button"
+                        @onclick="Convertir">
+                    <span class="fa-solid fa-right-left me-1"></span>
+                    Convertir
+                </button>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(MensajeError))
+        {
+            <div class="alert alert-danger">@MensajeError</div>
+        }
+
+        @if (Resultado is not null)
+        {
+            <div class="alert alert-success mt-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Origen:</strong><br />
+                        <span class="fs-5">@NombreZona(ZonaOrigen)</span><br />
+                        <span class="fs-4 fw-bold">
+                            @FechaHoraEntrada.ToString("dd/MM/yyyy HH:mm")
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Destino:</strong><br />
+                        <span class="fs-5">@NombreZona(ZonaDestino)</span><br />
+                        <span class="fs-4 fw-bold text-primary">
+                            @Resultado.Value.ToString("dd/MM/yyyy HH:mm")
+                        </span>
+                    </div>
+                </div>
+                <hr class="my-2" />
+                <small class="text-muted">
+                    Diferencia horaria: @DiferenciaHoras
+                </small>
+            </div>
+        }
+
+    </div>
+</div>

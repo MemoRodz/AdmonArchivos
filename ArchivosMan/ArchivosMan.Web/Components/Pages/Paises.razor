@@ -1,0 +1,90 @@
+﻿@page "/ubicacion/paises"
+@rendermode InteractiveServer
+@using ArchivosMan.BLL.Implementacion
+@using ArchivosMan.Web.Components.Shared
+
+<AuthGuard>
+    <PageTitle>Países</PageTitle>
+
+    <div class="excel-page">
+        <div class="excel-header">
+            <h3>Países</h3>
+
+            @if (PuedeCrear)
+            {
+                <button class="btn btn-primary btn-sm mb-2" @onclick="NuevoPais">Nuevo país</button>
+            }
+        </div>
+
+        @if (IsLoading)
+        {
+            <p><em>Cargando...</em></p>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger">@MensajeError</div>
+            }
+
+            @if (!string.IsNullOrEmpty(MensajeOk))
+            {
+                <div class="alert alert-success">@MensajeOk</div>
+            }
+
+            <div class="excel-table-wrapper">
+                <table class="table excel-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            @if (PuedeEditar || PuedeEliminar)
+                            {
+                                <th class="acciones">Acciones</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in ListaPaises)
+                        {
+                            <tr>
+                                <td>
+                                    @if (PaisEditando != null && PaisEditando.IdPais == p.IdPais && ModoEdicion)
+                                    {
+                                        <input class="form-control excel-input" @bind="PaisEditando.Nombre" />
+                                    }
+                                    else
+                                    {
+                                        @p.Nombre
+                                    }
+                                </td>
+
+                                @if (PuedeEditar || PuedeEliminar)
+                                {
+                                    <td class="acciones">
+                                        @if (PaisEditando != null && PaisEditando.IdPais == p.IdPais && ModoEdicion)
+                                        {
+                                            <button class="btn btn-sm btn-success me-1" @onclick="GuardarEdicion">Guardar</button>
+                                            <button class="btn btn-sm btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                                        }
+                                        else
+                                        {
+                                            @if (PuedeEditar)
+                                            {
+                                                <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarPais(p)">Editar</button>
+                                            }
+                                            @if (PuedeEliminar)
+                                            {
+                                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarPais(p.IdPais)">Eliminar</button>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+</AuthGuard>

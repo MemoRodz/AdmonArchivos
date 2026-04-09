@@ -1,0 +1,156 @@
+﻿@page "/ubicacion/estados"
+@rendermode InteractiveServer
+@using ArchivosMan.Web.Components.Shared
+
+<AuthGuard>
+    <PageTitle>Estados</PageTitle>
+
+    <div class="excel-page">
+        <div class="excel-header">
+            <h3>Estados</h3>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <label class="small m-0 mb-2">Mostrar</label>
+                <select class="form-select form-select-sm mb-2" style="width: 90px;" @bind="TamanoPagina" @bind:after="OnTamanoPaginaChanged">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+
+                @if (PuedeCrear)
+                {
+                    <button class="btn btn-primary btn-sm mb-2" @onclick="NuevoEstado">Nuevo estado</button>
+                }
+            </div>
+        </div>
+
+        @if (IsLoading)
+        {
+            <p>Cargando...</p>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger">@MensajeError</div>
+            }
+
+            @if (!string.IsNullOrEmpty(MensajeOk))
+            {
+                <div class="alert alert-success">@MensajeOk</div>
+            }
+
+            <div class="excel-table-wrapper">
+                <table class="table excel-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">Id</th>
+                            <th>Nombre</th>
+                            <th>País</th>
+                            @if (PuedeEditar || PuedeEliminar)
+                            {
+                                <th class="acciones">Acciones</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ListaEstadosPaginada.Any())
+                        {
+                            @foreach (var e in ListaEstadosPaginada)
+                            {
+                                <tr>
+                                    <td>@e.IdEstado</td>
+
+                                    <td>
+                                        @if (EstadoEditando != null && EstadoEditando.IdEstado == e.IdEstado && ModoEdicion)
+                                        {
+                                            <input class="form-control excel-input" @bind="EstadoEditando.Nombre" />
+                                        }
+                                        else
+                                        {
+                                            @e.Nombre
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (EstadoEditando != null && EstadoEditando.IdEstado == e.IdEstado && ModoEdicion)
+                                        {
+                                            <select class="form-select excel-select" @bind="EstadoEditando.PaisId">
+                                                @foreach (var p in ListaPaises)
+                                                {
+                                                    <option value="@p.IdPais">@p.Nombre</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            @ListaPaises.FirstOrDefault(p => p.IdPais == e.PaisId)?.Nombre
+                                        }
+                                    </td>
+
+                                    @if (PuedeEditar || PuedeEliminar)
+                                    {
+                                        <td class="acciones">
+                                            @if (EstadoEditando != null && EstadoEditando.IdEstado == e.IdEstado && ModoEdicion)
+                                            {
+                                                <button class="btn btn-sm btn-success me-1" @onclick="GuardarEdicion">Guardar</button>
+                                                <button class="btn btn-sm btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                                            }
+                                            else
+                                            {
+                                                @if (PuedeEditar)
+                                                {
+                                                    <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarEstado(e)">Editar</button>
+                                                }
+
+                                                @if (PuedeEliminar)
+                                                {
+                                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarEstado(e.IdEstado)">Eliminar</button>
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="@TotalColumnasTabla">No hay registros para mostrar.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="excel-pagination">
+                <div class="excel-pagination-info">
+                    Página @PaginaActual de @TotalPaginas | Registros: @TotalRegistros
+                </div>
+
+                <div class="excel-pagination-buttons">
+                    <button class="btn btn-sm btn-outline-secondary"
+                            @onclick="PaginaAnterior"
+                            disabled="@(PaginaActual == 1)">
+                        Anterior
+                    </button>
+
+                    @foreach (var pagina in PaginasVisibles)
+                    {
+                        <button class="btn btn-sm @(pagina == PaginaActual ? "btn-primary" : "btn-outline-secondary")"
+                                @onclick="() => IrAPagina(pagina)">
+                            @pagina
+                        </button>
+                    }
+
+                    <button class="btn btn-sm btn-outline-secondary"
+                            @onclick="PaginaSiguiente"
+                            disabled="@(PaginaActual == TotalPaginas)">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</AuthGuard>
