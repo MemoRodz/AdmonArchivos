@@ -1,5 +1,97 @@
-﻿<h3>Contactos</h3>
+﻿@page "/administracion/contactos"
+@rendermode InteractiveServer
+@using ArchivosMan.BLL.Implementacion
+@using ArchivosMan.Web.Components.Shared
 
-@code {
+<AuthGuard>
+    <PageTitle>Contactos</PageTitle>
+    <h3>Contactos</h3>
 
-}
+    @if (IsLoading)
+    {
+        <p>Cargando...</p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(MensajeError))
+        {
+            <div class="alert alert-danger">@MensajeError</div>
+        }
+        @if (!string.IsNullOrEmpty(MensajeOk))
+        {
+            <div class="alert alert-success">@MensajeOk</div>
+        }
+        @if (PuedeCrear)
+        {
+            <button class="btn btn-primary mb-3" @onclick="NuevoContacto">Nuevo contacto</button>
+        }
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                    @if (PuedeEditar || PuedeEliminar)
+                    {
+                        <th>Acciones</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in ListaContactos)
+                {
+                    <tr>
+                        <td>
+                            @if (ContactoEditando != null && ContactoEditando.IdContacto == c.IdContacto && ModoEdicion)
+                            {
+                                <input class="form-control" @bind="ContactoEditando.Nombre" />
+                            }
+                            else
+                            {
+                                @c.Nombre
+                            }
+                        </td>
+                        <td>
+                            @if (ContactoEditando != null && ContactoEditando.IdContacto == c.IdContacto && ModoEdicion)
+                            {
+                                <input class="form-control" @bind="ContactoEditando.Correo" />
+                            }
+                            else
+                            {
+                                @c.Correo
+                            }
+                        </td>
+                        <td>
+                            @if (ContactoEditando != null && ContactoEditando.IdContacto == c.IdContacto && ModoEdicion)
+                            {
+                                <input class="form-control" @bind="ContactoEditando.Telefono" />
+                            }
+                            else
+                            {
+                                @c.Telefono
+                            }
+                        </td>
+                        <td>
+                            @if (ContactoEditando != null && ContactoEditando.IdContacto == c.IdContacto && ModoEdicion)
+                            {
+                                <button class="btn btn-sm btn-success me-1" @onclick="GuardarEdicion">Guardar</button>
+                                <button class="btn btn-group-sm btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                            }
+                            else
+                            {
+                                @if (PuedeEditar)
+                                {
+                                    <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarContacto(c)">Editar</button>
+                                }
+                                @if (PuedeEliminar)
+                                {
+                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarContacto(c.IdContacto)">Eliminar</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</AuthGuard>

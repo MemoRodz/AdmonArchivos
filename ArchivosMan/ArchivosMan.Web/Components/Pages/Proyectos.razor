@@ -1,5 +1,153 @@
-﻿<h3>Proyectos</h3>
+﻿@page "/herramientas/proyectos"
+@rendermode InteractiveServer
+@using ArchivosMan.BLL.Implementacion
+@using ArchivosMan.Web.Components.Shared
 
-@code {
+<AuthGuard>
+    <PageTitle>Proyectos</PageTitle>
+    <div class="excel-page">
+        <div class="excel-header">
+            <h3>Proyecto</h3>
+            @if (PuedeCrear)
+            {
+                <button class="btn btn-primary mb-3" @onclick="NuevoProyecto">Nuevo proyecto</button>
+            }
+        </div>
 
-}
+        @if (IsLoading)
+        {
+            <p>Cargando...</p>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger">@MensajeError</div>
+            }
+            @if (!string.IsNullOrEmpty(MensajeOk))
+            {
+                <div class="alert alert-success">@MensajeOk</div>
+            }
+            <div class="excel-table-wrapper">
+                <table class="table excel-table">
+                    <thead>
+                        <tr>
+                            <th>Icono</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Final</th>
+                            @if (PuedeEditar || PuedeEliminar)
+                            {
+                                <th>Acciones</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in ListaProyectos)
+                        {
+                            <tr>
+                                <td>
+                                    @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                    {
+                                        <select class="form-select" @bind="ProyectoEditando.IconoId">
+                                            <option value="0">Seleccione un icono</option>
+                                            @foreach (var a in ListaArchivos)
+                                            {
+                                                <option value="@a.IdArchivo">@ObtenerTextoArchivo(a)</option>
+                                            }
+                                        </select>
+
+                                        @if (ProyectoEditando.IconoId > 0)
+                                        {
+                                            var iconoSeleccionado = ListaArchivos.FirstOrDefault(a => a.IdArchivo == ProyectoEditando.IconoId);
+
+                                            if (iconoSeleccionado is not null && !string.IsNullOrWhiteSpace(iconoSeleccionado.Url))
+                                            {
+                                                <img src="@iconoSeleccionado.Url"
+                                                     alt="Vista previa del icono"
+                                                     class="mt-2"
+                                                     style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #ddd;display:block;margin:auto;" />
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img src="@ObtenerUrlIcono(p.IconoId)"
+                                             alt="Icono del proyecto @p.Nombre"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #ddd;display:block;margin:auto;" />
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                    {
+                                        <input class="form-control excel-input" @bind="ProyectoEditando.Nombre" />
+                                    }
+                                    else
+                                    {
+                                        @p.Nombre
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                    {
+                                        <input class="form-control excel-input" @bind="ProyectoEditando.Descripcion" />
+                                    }
+                                    else
+                                    {
+                                        @p.Descripcion
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                    {
+                                        <input class="form-control excel-input" @bind="ProyectoEditando.FechaInicio" />
+                                    }
+                                    else
+                                    {
+                                        @p.FechaInicio?.ToShortDateString()
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                    {
+                                        <input class="form-control excel-input" @bind="ProyectoEditando.FechaFin" />
+                                    }
+                                    else
+                                    {
+                                        @p.FechaFin?.ToShortDateString()
+                                    }
+                                </td>
+                                @if (PuedeEditar || PuedeEliminar)
+                                {
+                                    <td class="acciones">
+                                        @if (ProyectoEditando != null && ProyectoEditando.IdProyecto == p.IdProyecto && ModoEdicion)
+                                        {
+                                            <button class="btn btn-sm btn-success me-1" @onclick="GuardarEdicion">Guardar</button>
+                                            <button class="btn btn-group-sm btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                                        }
+                                        else
+                                        {
+                                            @if (PuedeEditar)
+                                            {
+                                                <button class="btn btn-sm btn-warning me-1" @onclick="() => EditarProyecto(p)">Editar</button>
+                                            }
+                                            @if (PuedeEliminar)
+                                            {
+                                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarProyecto(p.IdProyecto)">Eliminar</button>
+                                            }
+                                
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+        }
+    </div>
+
+
+</AuthGuard>
