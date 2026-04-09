@@ -1,7 +1,67 @@
 ﻿@page "/"
+@inject ArchivosMan.BLL.Services.AuthState Auth
 
-<PageTitle>Home</PageTitle>
+<PageTitle>App Archivos</PageTitle>
 
-<h1>Hello, world!</h1>
+<h2 class="text-center">Bienvenido a la app de <strong>Archivos</strong>.</h2>
 
-Welcome to your new app.
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h3>Sistema de Gestión de Archivos y Negocios</h3>
+            <p class="text-muted">
+                Aplicación web en Blazor Server para administrar negocios, usuarios, proyectos,
+                contactos y archivos almacenados en Firebase, con control de acceso por roles.
+            </p>
+
+            <h4>¿Qué puedes hacer aquí?</h4>
+            <h6>Si estás <strong>autenticado</strong>.</h6>
+            <ul>
+                <li>Administrar negocios, usuarios y roles.</li>
+                <li>Subir y gestionar archivos e imágenes en Firebase.</li>
+                <li>Controlar proyectos y contactos registrados desde el sitio público.</li>
+            </ul>
+            <div class="border-top my-2"></div>
+            <h6>Acceso libre, podrás:</h6>
+            <ul>
+                <li>Convertir imágenes tipo <strong>JPG, PNG, ICO</strong>.</li>
+                <li>
+                    <strong>Convertidor:</strong> Convertir <strong>cantidades</strong> a letras, con o sin decimales, terminación Pesos M.N. para expresar moneda nacional en pesos mexicanos.
+                    <br />Y Convertidor de <strong>Temperaturas</strong> C° / F°.
+                </li>
+                <li>Horario mundial, necesitas saber qué hora es en otra parte del mundo, sólo se tiene que elegir el origen y la región que se requiere el horario.</li>
+                <li>Las clásicas por default de "Contador" y "Weather".</li>
+            </ul>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    Acceso rápido
+                </div>
+                <div class="card-body">
+                    @if (!Auth.EstaAutenticado)
+                    {
+                        <p class="mb-2">Inicia sesión para acceder al panel de administración.</p>
+                        <NavLink class="btn btn-primary w-100" href="/login">
+                            Ir a Login
+                        </NavLink>
+                    }
+                    else
+                    {
+                        <p class="mb-2">Continúa trabajando en el sistema:</p>
+                        <NavLink class="btn btn-primary w-100 mb-2" href="/ubicacion/paises">
+                            Ir a Países
+                        </NavLink>
+                        <NavLink class="btn btn-outline-secondary w-100 mb-2" href="/herramientas/archivos">
+                            Ir a Archivos
+                        </NavLink>
+                        <NavLink class="btn btn-outline-success w-100 mb-2" href="/image-convert">
+                            Ir a Conversión de Imágenes
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
