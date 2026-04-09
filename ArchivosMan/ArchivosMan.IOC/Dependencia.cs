@@ -21,9 +21,21 @@ namespace ArchivosMan.IOC
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ICryptoService, CryptoService>();
+            services.AddSingleton<AuthState>();
             services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<IPaisService, PaisService>();
+            services.AddScoped<IEstadoService, EstadoService>();
+            services.AddScoped<IRolService, RolService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IArchivoService, ArchivoService>();
             services.AddScoped<IFirebaseConfigService, FirebaseConfigService>();
             services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IProyectoService, ProyectoService>();
+            services.AddScoped<IUtilidadesService, UtilidadesService>();
+            services.AddScoped<IContactoService, ContactoService>();
+            services.AddScoped<INegocioService, NegocioService>();
+            services.AddScoped<ICorreoService, CorreoService>();
 
             return services;
         }

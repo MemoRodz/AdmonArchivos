@@ -1,0 +1,50 @@
+﻿@page "/registro"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Crear cuenta</PageTitle>
+
+<h3>Crear cuenta</h3>
+
+@if (!string.IsNullOrEmpty(MensajeError))
+{
+    <div class="alert alert-danger">@MensajeError</div>
+}
+@if (!string.IsNullOrEmpty(MensajeOk))
+{
+    <div class="alert alert-success">@MensajeOk</div>
+}
+
+<EditForm Model="@modelo" OnValidSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText class="form-control" @bind-Value="modelo.Nombre" />
+        <ValidationMessage For="@(() => modelo.Nombre)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Correo</label>
+        <InputText class="form-control" @bind-Value="modelo.Correo" />
+        <ValidationMessage For="@(() => modelo.Correo)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <InputText class="form-control" type="password" @bind-Value="modelo.Clave" />
+        <ValidationMessage For="@(() => modelo.Clave)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Confirmar contraseña</label>
+        <InputText class="form-control" type="password" @bind-Value="modelo.ClaveConfirmacion" />
+        <ValidationMessage For="@(() => modelo.ClaveConfirmacion)" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Registrarme</button>
+    <NavLink href="/login" class="btn btn-outline-secondary ms-2">
+        Cancelar
+    </NavLink>
+</EditForm>

@@ -1,0 +1,47 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+
+<div class="login-page">
+    <div class="login-overlay">
+        <div class="login-box">
+            <h3>Iniciar sesión</h3>
+
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger">@MensajeError</div>
+            }
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input class="form-control" @bind="Correo" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Clave</label>
+                <div class="input-group">
+                    <input class="form-control"
+                           type="@(MostrarClave ? "text" : "password")"
+                           @bind="Clave" />
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            @onclick="AlternarMostrarClave"
+                            title="@(MostrarClave ? "Ocultar" : "Mostrar")">
+                        <span class="@(MostrarClave ? "fas fa-eye-slash" : "fas fa-eye")" aria-hidden="true"></span>
+                    </button>
+
+                </div>
+            </div>
+
+            <button class="btn btn-primary" @onclick="IniciarSesion">Entrar</button>
+
+            <div class="mb-3">
+                <NavLink style="margin-right:10px;" href="/olvide-clave" class="small">
+                    ¿Olvidaste tu contraseña?
+                </NavLink>
+                <NavLink style="margin-right:10px;" href="/registro" class="small">
+                    ¿Crear cuenta?
+                </NavLink>
+            </div>
+        </div>
+    </div>
+</div>

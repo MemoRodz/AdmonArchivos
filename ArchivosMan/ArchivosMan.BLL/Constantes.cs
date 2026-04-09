@@ -23,6 +23,7 @@
             public const string Storage = "FireBase_Storage";
             public const string Mailing = "Servicio_Correo";
             public const string Template = "RestablecerClave.html";
+            public const string CorreoContacto = "memorodsarm@gmail.com";
         }
 
         public static class TipoPlantilla
