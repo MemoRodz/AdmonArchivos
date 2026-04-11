@@ -33,7 +33,6 @@ namespace ArchivosMan.Web.Components.Pages
 
         private async Task CargarDatos()
         {
-            Console.WriteLine("Cargar Datos Usuarios");
             IsLoading = true;
             try
             {

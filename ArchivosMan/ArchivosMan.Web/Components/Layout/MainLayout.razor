@@ -101,7 +101,6 @@
 
     private void CerrarSesion()
     {
-        Console.WriteLine("Cerrando sesión...");
         Auth.CerrarSesion();
         Nav.NavigateTo("/login", forceLoad: true);
     }

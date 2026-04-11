@@ -17,8 +17,7 @@ namespace ArchivosMan.Web.Components.Pages
 
         protected async Task IniciarSesion()
         {
-            MensajeError = "";
-            Console.WriteLine($"Iniciar Sesión...\n\tAcceso: {Clave}");
+            MensajeError = string.Empty;
             var usuario = await UsuarioService.ValidarCredencialesAsync(Correo, Clave);
 
             if (usuario == null)

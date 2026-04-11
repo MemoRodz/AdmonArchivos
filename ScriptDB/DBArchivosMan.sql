@@ -1,5 +1,5 @@
 /*
- Base de Datos ArchivosMan 
+ Base de Datos << ArchivosMan >>
  
  ********************************************
 	Estás tablas son las básicas para que el proyecto, como quiera que le llamen, pueda funcionar.

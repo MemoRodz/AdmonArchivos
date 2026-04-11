@@ -12,10 +12,8 @@ namespace ArchivosMan.Web.Components.Shared
 
         protected override void OnInitialized()
         {
-            Console.WriteLine($"Iniciando Autenticación...");
             if (!Auth.EstaAutenticado)
             {
-                Console.WriteLine($"Por Autenticar...");
                 // Si no hay sesión, redirigir a login, páginas protegidas.
                 Nav.NavigateTo("/login");
             }
