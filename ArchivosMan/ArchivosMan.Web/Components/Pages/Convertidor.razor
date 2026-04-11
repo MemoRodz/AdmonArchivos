@@ -76,3 +76,30 @@
         </div>
     </div>
 </div>
+<hr />
+<div class="p-3 border rounded shadow-sm">
+    <div class="mb-2 d-flex align-items-center gap-2">
+        <input type="text" class="form-control w-25"
+               @bind="entrada"
+               @onkeydown="OnKeyDownHandlerCadenaEncriptada"
+               placeholder="Cadena para encriptar"
+               onfocus="this.select()" />
+        <button class="btn btn-outline-primary" @onclick="ObtenerCadena">
+            Encriptar
+        </button>
+        <button class="btn btn-outline-danger" @onclick="LimpiarCadena">
+            Limpiar
+        </button>
+        <input type="text" class="form-control w-25"
+               @bind="entrada"
+               @onkeydown="OnKeyDownHandlerCadenaDesencriptada"
+               placeholder="Cadena encriptada"
+               onfocus="this.select()" />
+        <button class="btn btn-outline-primary" @onclick="ResolverCadena">
+            Desencriptar
+        </button>
+    </div>
+    <div>
+        <textarea class="form-control" rows="3" readonly>@salida</textarea>
+    </div>
+</div>
