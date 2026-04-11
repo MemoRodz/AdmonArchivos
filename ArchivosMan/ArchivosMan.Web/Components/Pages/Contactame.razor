@@ -1,5 +1,69 @@
-﻿<h3>Contactame</h3>
+﻿@page "/contactame"
+@rendermode InteractiveServer
+@using ArchivosMan.Web.Components.Pages
 
-@code {
+<PageTitle>Contáctame</PageTitle>
 
+<h3>Contáctame</h3>
+
+@if (!string.IsNullOrEmpty(MensajeError))
+{
+    <div class="alert alert-danger">@MensajeError</div>
 }
+@if (!string.IsNullOrEmpty(MensajeOk))
+{
+    <div class="alert alert-success">@MensajeOk</div>
+}
+
+<div class="card shadow-sm mt-3" style="max-width: 600px;">
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label">
+                Correo <span class="text-danger">*</span>
+            </label>
+            <input class="form-control"
+                   @bind="Correo"
+                   placeholder="tu@correo.com"
+                   maxlength="50" />
+        </div>
+        <div class="mb-1">
+            <label class="form-label">
+                Mensaje <span class="text-danger">*</span>
+            </label>
+            <textarea class="form-control"
+                      rows="6"
+                      maxlength="1000"
+                      placeholder="Escribe tu mensaje aquí..."
+                      @bind="Mensaje"
+                          @bind:event="oninput">
+            </textarea>
+            </div>
+
+            <div class="text-muted small mb-3">
+                Longitud de mensaje @Mensaje.Length, restan @(1000 - Mensaje.Length)
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+                <button class="btn btn-primary"
+                        type="button"
+                        disabled="@Procesando"
+                        @onclick="EnviarMensaje">
+                    @if (Procesando)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        @:Enviando...
+                    }
+                    else
+                    {
+                        <span class="fa-solid fa-paper-plane me-1"></span>
+                        @:Enviar
+                    }
+                </button>
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        @onclick="Limpiar">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
