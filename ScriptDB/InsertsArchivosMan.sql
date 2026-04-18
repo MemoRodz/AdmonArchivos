@@ -63,3 +63,73 @@ SET @usrCorreo = '<<Cambiar el valor correspondiente a Super ID=0';
 SET @usrClave =  '1BdFD9Hgf2Vvre/zNx3Y+UQAJZiSLVfIT8ofIjBkxbs=';	// Debería ser '123'
 SET @usrRolId = (SELECT idRol FROM dbo.Rol WHERE descripcion = 'Super' AND esActivo = 1);
 SET @usrUrlFoto = '<< URL de imagen para perfil de usuario.';
+
+INSERT INTO dbo.Usuario (nombre, correo, clave, rolId, urlFoto, esActivo, fechaCrea, usuarioCrea)
+VALUES (@usrNombre, @usrCorreo, @usrClave, @usrRolId, @usrUrlFoto, @usrEsActivo, @usrFechaCrea, @usrUsuarioCrea)
+
+-- Inserta valores para menus
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Herramientas', NULL, 'fa-solid fa-screwdriver-wrench', NULL, 'herramientas', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Administración', NULL, 'fas fa-fw fa-cog', NULL, 'administracion', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Ubicación', NULL, 'fa-solid fa-map-location-dot', NULL, 'ubicacion', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Archivos', 1, 'bi bi-file-image-fill-nav-menu', 'herramientas', 'archivos', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Proyectos', 1, 'bi bi-project-fill-nav-menu', 'herramientas', 'proyectos', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Usuarios', 2, 'bi bi-people-fill-nav-menu', 'administracion', 'usuarios', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Negocios', 2, 'bi bi-negocio-fill-nav-menu', 'administracion', 'negocios', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Países', 3, 'bi bi-globe-fill-nav-menu', 'ubicacion', 'paises', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Estados', 3, 'bi bi-map-fill-nav-menu', 'ubicacion', 'estados', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Login', NULL, NULL, NULL, 'login', 1, 0, );
+INSERT INTO Menu (descripcion, menuPadreId, icono, controlador, paginaAccion, esActivo, usuarioCrea) 
+VALUES ('Contactos', 2, 'bi bi-contact-fill-nav-menu', 'administracion', 'contactos', 1, 0, );
+
+-- Inserta valores para RolMenu
+-- idRol 0 = Super
+INSERT INTO RolMenu(idRol, idMenu, esActivo, usuarioCrea)
+SELECT 0 AS idRol, idMenu, 1, 1
+FROM Menu;
+
+-- idRol 1 = Administrador
+INSERT INTO RolMenu(idRol, idMenu, esActivo, usuarioCrea)
+SELECT 1 AS idRol, idMenu, 1, 1
+FROM Menu;
+
+-- idRol 2 = Supervisor
+INSERT INTO RolMenu(idRol,idMenu,esActivo, usuarioCrea) values
+(2,1,1,1),
+(2,2,1,1),
+(2,3,1,1),
+(2,4,1,1),
+(2,5,1,1),
+(2,7,1,1),
+(2,8,1,1),
+(2,9,1,1)
+
+-- idRol 3 = Empleado
+INSERT INTO RolMenu(idRol,idMenu,esActivo, usuarioCrea) values
+(3,1,1,1),
+(3,2,1,1),
+(3,3,1,1),
+(3,4,1,1),
+(3,5,1,1),
+(3,8,1,1),
+(3,9,1,1),
+(3,11,1,1)
+
+-- idRol 4 = Contacto
+INSERT INTO RolMenu(idRol,idMenu,esActivo, usuarioCrea) values
+(4,1,1,1),
+(4,3,1,1),
+(4,4,1,1),
+(4,5,1,1),
+(4,8,1,1),
+(4,9,1,1)
+
