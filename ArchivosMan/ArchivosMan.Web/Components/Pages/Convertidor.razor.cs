@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ArchivosMan.BLL.Interfaces;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using ArchivosMan.BLL.Interfaces;
+using Microsoft.JSInterop;
 
 namespace ArchivosMan.Web.Components.Pages
 {
@@ -8,6 +9,7 @@ namespace ArchivosMan.Web.Components.Pages
     {
         [Inject] private IUtilidadesService UtilidadesService { get; set; } = default!;
         [Inject] private ICryptoService CryptoService { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
 
         private double valorMonto = 0.0;
         private bool mostrarDecimales;
@@ -17,6 +19,12 @@ namespace ArchivosMan.Web.Components.Pages
         private decimal temperaturaSalida = 0.0m;
         private string entrada = string.Empty;
         private string salida = string.Empty;
+        #region Conversión minutos
+        protected int Minutos { get; set; }
+        protected string Resultado { get; set; } = string.Empty;
+
+        private ElementReference inputMinutos;
+        #endregion
 
         private void NumeroLetra()
         {
@@ -131,6 +139,16 @@ namespace ArchivosMan.Web.Components.Pages
             {
                 salida = $"Ocurrió un error al descifrar la cadena: {ex.Message}";
             }
+        }
+
+        protected async Task SeleccionarTexto(FocusEventArgs e)
+        {
+            await JS.InvokeVoidAsync("selectInputValue", inputMinutos);
+        }
+
+        protected void Convertir()
+        {
+            Resultado = UtilidadesService.ConvertirMinutos(Minutos);
         }
     }
 }

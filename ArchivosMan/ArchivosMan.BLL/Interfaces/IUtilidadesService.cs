@@ -11,5 +11,7 @@
         decimal fahrenheit(decimal celsius);
 
         string GenerarClave();
+
+        string ConvertirMinutos(int minutos);
     }
 }

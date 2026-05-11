@@ -102,4 +102,27 @@
     <div>
         <textarea class="form-control" rows="3" readonly>@salida</textarea>
     </div>
+    <hr />
+    <div class="p-3 border rounded shadow-sm mb-4">
+        <h5>Conversión de minutos</h5>
+
+        <EditForm Model="@this" OnValidSubmit="Convertir">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Minutos</label>
+                <InputNumber @bind-Value="Minutos" class="form-control" onfocus="selectInputValue(this)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Convertir</button>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(Resultado))
+        {
+            <div class="alert alert-info mt-3">
+                @Resultado
+            </div>
+        }
+    </div>
 </div>

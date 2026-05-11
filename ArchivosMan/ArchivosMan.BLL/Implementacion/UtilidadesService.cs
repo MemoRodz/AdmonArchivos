@@ -144,5 +144,24 @@ namespace ArchivosMan.BLL.Implementacion
             string clave = Guid.NewGuid().ToString("N").Substring(0, 6);
             return clave;
         }
+
+        public string ConvertirMinutos(int minutos)
+        {
+            if (minutos < 0) return "Valor inválido";
+
+            int years = minutos / (60 * 24 * 365);
+            minutos %= (60 * 24 * 365);
+
+            int weeks = minutos / (60 * 24 * 7);
+            minutos %= (60 * 24 * 7);
+
+            int days = minutos / (60 * 24);
+            minutos %= (60 * 24);
+
+            int hours = minutos / 60;
+            minutos %= 60;
+
+            return $"{years} años, {weeks} semanas, {days} días, {hours} horas, {minutos} minutos";
+        }
     }
 }
